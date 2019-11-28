@@ -1,0 +1,44 @@
+package br.edu.unilasalle.registrationsystem.dao;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
+import javax.swing.JOptionPane;
+
+import br.edu.unilasalle.registrationsystem.model.Person;
+ 
+public class PersonDAO extends BaseDAO implements Serializable {
+	private static final long serialVersionUID = -9037813091470569756L;
+ 
+    public void save(Person person) {
+        if (person != null) {
+            Connection connection = null;
+            try {
+            	connection = getConnection();
+            	
+            	String SQL = "INSERT INTO tb_person (ds_name, ds_phone, ds_email, ds_address, nr_deleted, dt_insert, ds_iusername) "
+            			+ " VALUES (?,?,?,?,?, now(), 'system')";
+            	PreparedStatement ps = connection.prepareStatement(SQL);
+        		ps.setString(1, person.getName());
+        		ps.setString(2, person.getPhone());
+        		ps.setString(3, person.getEmail());
+        		ps.setString(4, person.getAddress());
+        		ps.setBoolean(5, person.isDeleted());
+
+        		ps.execute();
+ 
+                JOptionPane.showMessageDialog(null, "Person successfully inserted!");
+ 
+            } catch (Exception e) {
+            	e.printStackTrace();
+                JOptionPane.showMessageDialog(null, "Sorry, there was an error processing your request. Please try again later.");
+            } finally {
+				closeConnection(connection);
+			}
+        } else {
+        	System.out.println("ERROR (PersonDAO): Person parameter is null or empty.");
+        	
+        	JOptionPane.showMessageDialog(null, "Sorry, there was an error processing your request. Please try again later.");
+        }
+    }
+}

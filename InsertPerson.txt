@@ -1,0 +1,92 @@
+package br.edu.unilasalle.registrationsystem.view;
+
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+import br.edu.unilasalle.registrationsystem.dao.PersonDAO;
+import br.edu.unilasalle.registrationsystem.model.Person;
+
+public class InsertPerson extends JFrame {
+	private static final long serialVersionUID = -2105513146014457827L;
+	private JPanel panel;
+	private JButton btnSave;
+	private JButton btnClean;
+	private JTextField txtName;
+	private JTextField txtPhone;
+	private JTextField txtEmail;
+	private JTextField txtAddress;
+
+	public InsertPerson() {
+		super("Cadastro de Pessoa");
+		createWindow();
+	}
+
+	public void createWindow() {
+		btnSave = new JButton("Salvar");
+		btnClean = new JButton("Limpar");
+		JLabel lblName = new JLabel("        * Nome :   ");
+		JLabel lblPhone = new JLabel("        * Telefone :   ");
+		JLabel lblEmail = new JLabel("        * Email :   ");
+		JLabel lblAddress = new JLabel("        * Endereço :   ");
+		this.txtName = new JTextField(180);
+		this.txtPhone = new JTextField(20);
+		this.txtEmail = new JTextField(180);
+		this.txtAddress = new JTextField(80);
+
+		this.panel = new JPanel();
+		this.panel.setLayout(new GridLayout(5, 2));
+		this.panel.add(lblName);
+		this.panel.add(this.txtName);
+		this.panel.add(lblPhone);
+		this.panel.add(this.txtPhone);
+		this.panel.add(lblEmail);
+		this.panel.add(this.txtEmail);
+		this.panel.add(lblAddress);
+		this.panel.add(this.txtAddress);
+		this.panel.add(btnClean);
+		this.panel.add(btnSave);
+
+		getContentPane().add(this.panel);
+		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		setSize(600, 200);
+		setVisible(true);
+		setResizable(false);
+		btnSave.addActionListener(new BtnSaveListener());
+		btnClean.addActionListener(new BtnCleanListener());
+	}
+
+	private class BtnSaveListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			Person person = new Person();
+			person.setName(txtName.getText());
+			person.setPhone(txtPhone.getText());
+			person.setEmail(txtEmail.getText());
+			person.setAddress(txtAddress.getText());
+
+			PersonDAO dao = new PersonDAO();
+			dao.save(person);
+			setVisible(false);
+		}
+	}
+
+	private class BtnCleanListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			txtName.setText("");
+			txtPhone.setText("");
+			txtEmail.setText("");
+			txtAddress.setText("");
+		}
+	}
+	
+	 public static void main(String[] args) {
+	        InsertPerson ip = new InsertPerson();
+	        ip.setVisible(true);
+	    }
+}

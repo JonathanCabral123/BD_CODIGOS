@@ -1,0 +1,19 @@
+package br.edu.unilasalle.registrationsystem.dao;
+
+import java.io.Serializable;
+import java.sql.Connection;
+
+import br.edu.unilasalle.registrationsystem.utils.ConnectionFactory;
+
+public class BaseDAO implements Serializable {
+	private static final long serialVersionUID = -9141389644044374981L;
+	private ConnectionFactory factory = new ConnectionFactory();
+
+	public Connection getConnection() {
+		return this.factory.createConnection();
+	}
+	
+	public void closeConnection(Connection connection) {
+		this.factory.closeConnection(connection);
+	}
+}
